@@ -10,7 +10,7 @@ _hideTocVersionToggle: true
 
 This tutorial takes you through setting up two .NET Core applications using services discovery. The first will register it's endpoints for discovery, and the second will discover the first's services.
 
-First, **start a Eureka Server** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles), start a local instance of Eureka.
+First, **start a Eureka Server** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles).
 
  ```powershell
  docker run --publish 8761:8761 steeltoeoss/eureka-server
@@ -65,27 +65,18 @@ Next, **create a .NET Core WebAPI** that registers itself as a service.
     }
     ```
 
-1. Run the application and confirm it has registered with Eureka
+1. Run the application
 
-  # [.NET cli](#tab/cli)
+    # [Visual Studio](#tab/vs)
 
-  ```powershell
-  dotnet run <PATH_TO>\Eureka_Register_Example.csproj
-  ```
-
-  Navigate to the endpoint (you may need to change the port number) [http://localhost:5000/api/values](http://localhost:5000/api/values)
-
-  # [Visual Studio](#tab/vs)
-
-  1. Choose the top *Debug* menu, then choose *Start Debugging (F5)*. This should bring up a browser with the app running
-  1. Navigate to the endpoint (you may need to change the port number) [http://localhost:8080/api/values](http://localhost:8080/api/values)
+    1. Choose the top *Debug* menu, then choose *Start Debugging (F5)*. This should bring up a browser with the app running.
   
-  ***
+    ***
 
 1. Navigate to the Eureka dashboard at [http://localhost:8761/](http://localhost:8761/) to see the service listed.
 1. Leave the application running while you continue to the next steps, you'll be connecting to it.
 
-Then, **create another .NET Core WebAPI** that will discover the registered service.
+Now, **create another .NET Core WebAPI** that will discover the registered service.
 
 1. Create a new ASP.NET Core WebAPI app with the [Steeltoe Initializr](https://start.steeltoe.io)
   ![Steeltoe Initializr](~/labs/images/initializr/eureka-discover-discovery.png)
@@ -136,22 +127,26 @@ Then, **create another .NET Core WebAPI** that will discover the registered serv
     using Microsoft.AspNetCore.Mvc;
     using Steeltoe.Common.Discovery;
     using System.Net.Http;
-    
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase {
-      private readonly ILogger _logger;
-      DiscoveryHttpClientHandler _handler;
-      public ValuesController(ILogger<ValuesController> logger, IDiscoveryClient client) {
-        _logger = logger;
-        _handler = new DiscoveryHttpClientHandler(client);
-      }
+    using Steeltoe.Discovery;
+
+    namespace Eureka_Discover_Example.Controllers {
+      [Route("api/[controller]")]
+      [ApiController]
+      public class ValuesController : ControllerBase {
+        private readonly ILogger _logger;
+        DiscoveryHttpClientHandler _handler;
+        public ValuesController(ILogger<ValuesController> logger, IDiscoveryClient client) {
+          _logger = logger;
+          _handler = new DiscoveryHttpClientHandler(client);
+        }
       
-      // GET api/values
-      [HttpGet]
-      public async Task<string> Get() {
-        var client = new HttpClient(_handler, false);
-        return await client.GetStringAsync("http://Eureka_Register_Example/api/values");
+        // GET api/values
+        [HttpGet]
+        public async Task<string> Get() {
+          var client = new HttpClient(_handler, false);
+          var discoveredValue = await client.GetStringAsync("http://Eureka_Register_Example/api/values");
+          return $"This value came from a discovered service - {discoveredValue}";
+        }
       }
     }
     ```
@@ -161,18 +156,10 @@ Then, **create another .NET Core WebAPI** that will discover the registered serv
 
 **Run** the app to see discovery in action
 
-  # [.NET cli](#tab/cli)
-
-  ```powershell
-  dotnet run <PATH_TO>\Eureka_Discover_Example.csproj
-  ```
-
-  Navigate to the endpoint (you may need to change the port number) [http://localhost:5000/api/values](http://localhost:5000/api/values)
-
   # [Visual Studio](#tab/vs)
 
-  1. Choose the top *Debug* menu, then choose *Start Debugging (F5)*. This should bring up a browser with the app running
-  1. Navigate to the endpoint (you may need to change the port number) [http://localhost:8080/api/values](http://localhost:8080/api/values)
+  1. Choose the top *Debug* menu, then choose *Start Debugging (F5)*. This should bring up a browser with the app running.
+  1. Navigate to the endpoint [http://localhost:8081/api/values](http://localhost:8081/api/values).
   
   ***
 
