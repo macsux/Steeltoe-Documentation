@@ -26,7 +26,6 @@ Next, **create a .NET Core WebAPI** that interacts with MS SQL
 1. Set the instance address in **appsettings.json**
 
     ```json
-    {
       "sqlserver": {
         "credentials": {
           "server": "127.0.0.1",
@@ -35,7 +34,6 @@ Next, **create a .NET Core WebAPI** that interacts with MS SQL
           "password": "Steeltoe123",
         }
       }
-    }
     ```
 
     > [!TIP]
