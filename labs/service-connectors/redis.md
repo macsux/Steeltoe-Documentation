@@ -9,7 +9,7 @@ _disableFooter: true
 
 This tutorial takes you through setting up a .NET Core application with the Redis service connector.
 
-First, **start a Redis instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles), start a local instance of Redis.
+First, **start a Redis instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles).
 
  ```powershell
  docker run --publish 6379:6379 steeltoeoss/redis
@@ -26,14 +26,12 @@ Next, **create a .NET Core WebAPI** that interacts with Redis
 1. Set the instance address in **appsettings.json**
 
     ```json
-    {
-      "mongodb": {
+      "redis": {
         "client": {
-          "server": "127.0.0.1",
+          "Host": "127.0.0.1",
           "port": "6379"
         }
       }
-    }
     ```
 
     > [!TIP]
