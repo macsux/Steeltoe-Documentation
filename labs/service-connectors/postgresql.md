@@ -9,7 +9,7 @@ _disableFooter: true
 
 This tutorial takes you through setting up a .NET Core application with the PostgreSQL service connector.
 
-First, **start a PostgreSQL instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles), start a local instance of PostgreSQL.
+First, **start a PostgreSQL instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles).
 
  ```powershell
  docker run --env POSTGRES_PASSWORD=Steeltoe789 --publish 5432:5432 steeltoeoss/postgresql
@@ -18,7 +18,7 @@ First, **start a PostgreSQL instance** using the [Steeltoe dockerfile](https://g
 Next, **create a .NET Core WebAPI** that interacts with PostgreSQL
 
 1. Create a new ASP.NET Core WebAPI app with the [Steeltoe Initializr](https://start.steeltoe.io)
-    ![Steeltoe Initialzr](~/labs/images/initializr/mongo-connector.png)
+    ![Steeltoe Initialzr](~/labs/images/initializr/postgresql.png)
 1. Name the project "Postgre_Connector"
 1. Add the "PostgreSQL" dependency
 1. Click **Generate** to download a zip containing the new project
@@ -26,7 +26,6 @@ Next, **create a .NET Core WebAPI** that interacts with PostgreSQL
 1. Set the instance address in **appsettings.json**
 
     ```json
-    {
       "postgres": {
         "client": {
           "server": "127.0.0.1",
@@ -35,7 +34,6 @@ Next, **create a .NET Core WebAPI** that interacts with PostgreSQL
           "password": "Steeltoe789"
         }
       }
-    }
     ```
 
     > [!TIP]
