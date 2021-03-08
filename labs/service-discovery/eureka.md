@@ -27,7 +27,6 @@ Next, **create a .NET Core WebAPI** that registers itself as a service.
 1. Set the Eureka instance address in **appsettings.json**
 
     ```json
-    {
       "spring": {
         "application": {
           "name": "Eureka_Register_Example"
@@ -46,7 +45,6 @@ Next, **create a .NET Core WebAPI** that registers itself as a service.
           "preferIpAddress": true
         }
       }
-    }
     ```
 
     > [!TIP]
@@ -87,7 +85,6 @@ Now, **create another .NET Core WebAPI** that will discover the registered servi
 1. Set the Eureka instance address in **appsettings.json**
 
     ```json
-    {
       "spring": {
         "application": {
           "name": "Eureka_Discover_Example"
@@ -103,7 +100,6 @@ Now, **create another .NET Core WebAPI** that will discover the registered servi
         "instance": {
         }
       }
-    }
     ```
 
 1. Validate the port number the app will be served on, in **launchSettings.json**
