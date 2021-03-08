@@ -9,7 +9,7 @@ _disableFooter: true
 
 This tutorial takes you through setting up a .NET Core application with the MySQL service connector.
 
-First, **start a MySQL instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles) start a local instance of MySQL.
+First, **start a MySQL instance** using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles).
 
   ```powershell
   docker run --env MYSQL_ROOT_PASSWORD=Steeltoe456 --publish 3306:3306 steeltoeoss/mysql
@@ -26,7 +26,6 @@ Next, **create a .NET Core WebAPI** that interacts with MySQL
 1. Set the instance address in **appsettings.json**
 
     ```json
-    {
       "mysql": {
         "client": {
           "server": "127.0.0.1",
@@ -35,7 +34,6 @@ Next, **create a .NET Core WebAPI** that interacts with MySQL
           "password": "Steeltoe456"
         }
       }
-    }
     ```
 
     > [!TIP]
