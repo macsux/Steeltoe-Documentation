@@ -28,7 +28,6 @@ Next, **create a .NET Core WebAPI** that interacts with Mongo DB
 1. Set the instance address in **appsettings.json**
 
     ```json
-    {
       "mongodb": {
         "client": {
           "server": "127.0.0.1",
@@ -37,7 +36,6 @@ Next, **create a .NET Core WebAPI** that interacts with Mongo DB
           "password": "Steeltoe234"
         }
       }
-    }
     ```
 
     > [!TIP]
