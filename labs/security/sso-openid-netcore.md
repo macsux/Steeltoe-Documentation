@@ -15,7 +15,7 @@ This is a guide to integrate a .Net Core API with the Cloud Foundry SSO identity
 First, **establish an identity provider**. Using the [Steeltoe dockerfile](https://github.com/steeltoeoss/dockerfiles), start a local instance of SSO.
 
 ```powershell
-docker run --rm -ti -p 8080:8080 --name steeltoe-uaa steeltoeoss/workshop-uaa-server
+docker run --rm -ti -p 8081:8080 --name steeltoe-uaa steeltoeoss/workshop-uaa-server
 ```
 
   > [!NOTE]
@@ -24,9 +24,9 @@ docker run --rm -ti -p 8080:8080 --name steeltoe-uaa steeltoeoss/workshop-uaa-se
 Next, **create a .NET Core WebAPI** that interacts with SSO
 
 1. Create a new ASP.NET Core WebAPI app with the [Steeltoe Initializr](https://start.steeltoe.io)
-    ![Steeltoe Initialzr](~/labs/images/initializr/no-dependencies.png)
+    ![Steeltoe Initialzr](~/labs/images/initializr/oauth-sso.png)
 1. Name the project "OAuth_SSO_Example"
-1. Add the "Spring Cloud Config Server" dependency
+1. Add the "OAuth Connector" dependency
 1. Click **Generate** to download a zip containing the new project
 1. Extract the zipped project and open in your IDE of choice
 1. Open the package manager console
@@ -34,7 +34,7 @@ Next, **create a .NET Core WebAPI** that interacts with SSO
 1. Install NuGet distributed packages
 
     ```powershell
-    Install-Package -Id Steeltoe.Security.Authentication.CloudFoundryCore -Version 2.4
+    Install-Package -Id Steeltoe.Security.Authentication.CloudFoundryCore
     ```
 
 1. Set the instance address in **appsettings.json**
@@ -60,12 +60,16 @@ Then, **add** Cloud Foundry OpenID Connect, secure endpoints, and run the app
 
     ```csharp
     using Steeltoe.Security.Authentication.CloudFoundry;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.HttpOverrides;
     
     public class Startup {
       public IConfiguration Configuration { get; private set; }
       public Startup(IConfiguration configuration){
         Configuration = configuration;
       }
+
       public void ConfigureServices(IServiceCollection services){
         services.AddAuthentication(options => {
           options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -75,17 +79,31 @@ Then, **add** Cloud Foundry OpenID Connect, secure endpoints, and run the app
           // set values like login url, access denied path, etc here
           options.AccessDeniedPath = new PathString("/Home/AccessDenied");
         })
-        .AddCloudFoundryOpenId(Configuration); // Add Cloud Foundry authentication service
+        .AddCloudFoundryOpenIdConnect(Configuration); // Add Cloud Foundry authentication service
+
+        services.AddControllers();
       }
-      public void Configure(IApplicationBuilder app){
+
+      public void Configure(IApplicationBuilder app) {
+        if (env.IsDevelopment()) {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseRouting();
+
         // Use the protocol from the original request when generating redirect uris
         // (eg: when TLS termination is handled by an appliance in front of the app)
         app.UseForwardedHeaders(new ForwardedHeadersOptions {
-          ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+            ForwardedHeaders = ForwardedHeaders.XForwardedProto
         });
-        
+
         // Add authentication middleware to pipeline
-        app.UseAuthentication(); 
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints => {
+            endpoints.MapControllers();
+        });
       }
     }
     ```
@@ -93,7 +111,6 @@ Then, **add** Cloud Foundry OpenID Connect, secure endpoints, and run the app
 1. Open the **Controllers\ValuesControllers.cs** file and secure endpoints
 
     ```csharp
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
       
     [Route("api/[controller]")]
@@ -143,7 +160,7 @@ Then, **add** Cloud Foundry OpenID Connect, secure endpoints, and run the app
   # [.NET cli](#tab/cli)
 
   ```powershell
-  dotnet run<PATH_TO>\OAuth_SSO_Example.csproj
+  dotnet run <PATH_TO>\OAuth_SSO_Example.csproj
   ```
 
   Navigate to the endpoint (you may need to change the port number) [http://localhost:5000/api/values](http://localhost:5000/api/values)
