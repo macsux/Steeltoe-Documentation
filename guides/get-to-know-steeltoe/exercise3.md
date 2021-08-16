@@ -95,7 +95,8 @@ using Microsoft.EntityFrameworkCore;
 Also replace the class statement with this. Don't change the 'namespace' part, just the class within the namespace.
 
 ```csharp
-public class TodoContext : DbContext {
+public class TodoContext : DbContext 
+{
   public TodoContext(): base(){ }
   public TodoContext(DbContextOptions<TodoContext> options)
       : base(options) {
@@ -113,18 +114,14 @@ Right click on the 'Models' folder and choose "Add" > "Class..." and name it `To
 
 <img src="~/guides/images/vs-new-class.png" alt="Create a new project class" width="100%">
 
-# [.NET CLI](#tab/dotnet-cli)
-
-```powershell
-dotnet new classlib -n "TodoItem.cs"
-```
 
 ---
 
 Open the newly created class file in your IDE and replace th class statement with this. Don't change the 'namespace' part, just the class within the namespace.
 
 ```csharp
-public class TodoItem {
+public class TodoItem 
+{
   public long Id { get; set; }
   public string Name { get; set; }
   public bool IsComplete { get; set; }
@@ -150,7 +147,8 @@ using Steeltoe.Connector.SqlServer.EFCore;
 Then append the 'add db' statement to the 'ConfigureServices' method and save the changes
 
 ```csharp
-public void ConfigureServices(IServiceCollection services) {
+public void ConfigureServices(IServiceCollection services) 
+{
   services.AddDbContext<Models.TodoContext>(options => options.UseSqlServer(Configuration));
 
   //...
@@ -160,7 +158,8 @@ public void ConfigureServices(IServiceCollection services) {
 Because we are going to be interacting with a brand new database instance we'll need to make sure the database has been initialized before the application can fully start up. In "Startup.cs" adjust the input parameters of the 'Configure' function to include the TodoContext and add the 'EnsureCreated' command as the last line in the function.
 
 ```csharp
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Models.TodoContext context) {
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Models.TodoContext context) 
+{
 
   //...
 
@@ -177,15 +176,6 @@ Create a new class in the 'Controllers' folder named `TodoItemsController.cs`.
 Right click on the 'Controllers' folder and choose "Add" > "Class..." and name it `TodoItemsController.cs`.
 
 <img src="~/guides/images/vs-new-class.png" alt="Create a new project class" width="100%">
-
-# [.NET CLI](#tab/dotnet-cli)
-
-```powershell
-cd ../Controllers
-dotnet new classlib -n "TodoItemsController.cs"
-```
-
----
 
 Open the newly created class file in your IDE and replace the 'using' statements in the file with the below.
 
@@ -249,7 +239,9 @@ public class TodoItemsController : ControllerBase
 }
 ```
 
+
 ## Update appsettings.json with database connection
+
 
 <!-- To get a running instance of SQL, you could go a few different paths. Depending on how the instance is made available you'll want to adjust the values in `appsettings.json`.
 
@@ -276,13 +268,13 @@ If your SQL instance is running somewhere else you'll need its URI port number a
 Add the below json to 'appsettings.json', just after the 'management' section. This will give Steeltoe connection information for the database instance as well as name the new database.
 
 ```json
-,"sqlserver": {
-  "credentials": {
+,"SqlServer": {
+  "Credentials": {
     //"ConnectionString": "Server=(localdb)\\mssqllocaldb;database=Todo;Trusted_Connection=True;",
-    "server": %%SQL_SERVER_ADDRESS%%,
-    "port": %%SQL_SERVER_PORT%%,
-    "username": %%SQL_SERVER_USERNAME%%,
-    "password": %%SQL_SERVER_PASSWORD%%
+    "Server": %%SQL_SERVER_ADDRESS%%,
+    "Port": %%SQL_SERVER_PORT%%,
+    "Username": %%SQL_SERVER_USERNAME%%,
+    "Password": %%SQL_SERVER_PASSWORD%%
   }
 }
 ```

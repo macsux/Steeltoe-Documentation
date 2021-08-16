@@ -49,11 +49,11 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 Expose all the actuator endpoints for debugging and demonstration purposes in "appsettings.json". Append the below json just after the "AllowedHosts" line (should be around line 10). And save the file.
 
 ```json
-,"management": {
-  "endpoints": {
-    "actuator": {
-      "exposure": {
-        "include": [ "*" ]
+,"Management": {
+  "Endpoints": {
+    "Actuator": {
+      "Exposure": {
+        "Include": [ "*" ]
       }
     }
   }

@@ -86,13 +86,6 @@ Right click on the 'Controllers' folder and choose "Add" > "Class..." and name i
 
 <img src="~/guides/images/vs-new-class.png" alt="Create a new project class" width="100%">
 
-# [.NET CLI](#tab/dotnet-cli)
-
-```powershell
-cd Controllers
-dotnet new classlib -n "ValuesController.cs"
-```
-
 ---
 
 Open the newly created class file in your IDE and replace the 'using' statements in the file with the below.
@@ -133,15 +126,15 @@ public class ValuesController : ControllerBase
 In 'appsettings.json' add the following json just below the "sqlserver" section. This should be preloaded with the correct connection values of a Spring Config server.
 
 ```json
-,"spring": {
-  "application": {
-    "name": "myapplication"
+,"Spring": {
+  "Application": {
+    "Name": "myapplication"
   },
-  "cloud": {
-    "config": {
-      "validateCertificates": false,
+  "Cloud": {
+    "Config": {
+      "ValidateCertificates": false,
       "FailFast": %%SPRING_CONFIG_FAILFAST%%,
-      "uri": %%SPRING_CONFIG_URI%%,
+      "Uri": %%SPRING_CONFIG_URI%%,
       //"Username": %%SPRING_CONFIG_USERNAME%%,
       //"Password": %%SPRING_CONFIG_PASSWORD%%
     }
